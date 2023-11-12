@@ -74,5 +74,7 @@
     		<string>zalopay</string>
     		<string>zalopay.api.v2</string>
     	</array>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
 </dict>
 </plist>

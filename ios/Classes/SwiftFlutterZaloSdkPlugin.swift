@@ -49,7 +49,7 @@ public class SwiftFlutterZaloSdkPlugin: NSObject, FlutterPlugin{
 
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         paymentHandler = ZPPaymentResultHandler(result: result);
-      if(call.method=="payOrder"){
+      if(call.method == "payOrder"){
           let args = call.arguments as? [String: Any]
           let  _zptoken = args?["zptoken"] as? String
           ZaloPaySDK.sharedInstance()?.paymentDelegate = paymentHandler

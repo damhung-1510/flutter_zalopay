@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_zalo_sdk_example/repo/payment.dart';
-import 'package:flutter_zalopay_sdk/flutter_zalopay_sdk.dart';
 import 'package:flutter_zalo_sdk_example/utils/config.dart';
 import 'package:flutter_zalo_sdk_example/utils/theme_data.dart';
+import 'package:flutter_zalopay_sdk/flutter_zalopay_sdk.dart';
 
 void main() => runApp(App());
 
@@ -21,7 +20,6 @@ class App extends StatelessWidget {
     );
   }
 }
-
 
 class Dashboard extends StatefulWidget {
   final String title;
@@ -88,45 +86,45 @@ class _HomeZaloPayState extends State<HomeZaloPay> {
 
   // Button Create Order
   Widget _btnCreateOrder(String value) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
-    child: GestureDetector(
-      onTap: () async {
-        int amount = int.parse(value);
-        if (amount < 1000 || amount > 1000000) {
-          setState(() {
-            zpTransToken = "Invalid Amount";
-          });
-        } else {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
+        padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+        child: GestureDetector(
+          onTap: () async {
+            int amount = int.parse(value);
+            if (amount < 1000 || amount > 1000000) {
+              setState(() {
+                zpTransToken = "Invalid Amount";
               });
-          var result = await createOrder(amount);
-          if (result != null) {
-            Navigator.pop(context);
-            zpTransToken = result.zptranstoken;
-            print("zpTransToken $zpTransToken'.");
-            setState(() {
-              zpTransToken = result.zptranstoken;
-              showResult = true;
-            });
-          }
-        }
-      },
-      child: Container(
-          height: 50.0,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: AppColor.primaryColor,
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          child: Text("Create Order",
-              style: TextStyle(color: Colors.white, fontSize: 20.0))),
-    ),
-  );
+            } else {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  });
+              var result = await createOrder(amount);
+              if (result.zptranstoken != null) {
+                Navigator.pop(context);
+                zpTransToken = result.zptranstoken;
+                print("zpTransToken $zpTransToken'.");
+                setState(() {
+                  zpTransToken = result.zptranstoken;
+                  showResult = true;
+                });
+              }
+            }
+          },
+          child: Container(
+              height: 50.0,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: AppColor.primaryColor,
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              child: Text("Create Order",
+                  style: TextStyle(color: Colors.white, fontSize: 20.0))),
+        ),
+      );
 
   /// Build Button Pay
   Widget _btnPay(String zpToken) => Padding(
@@ -191,11 +189,11 @@ class _HomeZaloPayState extends State<HomeZaloPay> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 5.0),
             child: Visibility(
+              visible: showResult,
               child: Text(
                 "zptranstoken:",
                 style: textStyle,
               ),
-              visible: showResult,
             ),
           ),
           Container(
@@ -246,4 +244,3 @@ Widget _quickConfig = Container(
     ],
   ),
 );
-
