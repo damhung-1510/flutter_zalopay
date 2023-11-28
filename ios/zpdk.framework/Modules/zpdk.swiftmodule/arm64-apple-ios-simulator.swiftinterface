@@ -1,9 +1,12 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 5.4 (swiftlang-1205.0.26.9 clang-1205.0.19.55)
-// swift-module-flags: -target arm64-apple-ios8.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name zpdk
+// swift-compiler-version: Apple Swift version 5.7.1 (swiftlang-5.7.1.135.3 clang-1400.0.29.51)
+// swift-module-flags: -target arm64-apple-ios9.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name zpdk
+// swift-module-flags-ignorable: -enable-bare-slash-regex
 import Foundation
 import Swift
 import UIKit
+import _Concurrency
+import _StringProcessing
 @_exported import zpdk
 public enum FlushBehaviour {
   case auto
@@ -56,7 +59,7 @@ public struct TypedTracker<EventType> : zpdk.TypedTrackerType where EventType : 
   public func track(event: EventType)
   public func flush()
 }
-extension TrackerType {
+extension zpdk.TrackerType {
   public func of<EventType>(type: EventType.Type) -> zpdk.TypedTracker<EventType> where EventType : zpdk.TrackerEventType
 }
 public struct Configuration {
@@ -66,17 +69,17 @@ public struct Configuration {
   public var maxEventsPerSession: Swift.Int
   public init(flushInterval: Foundation.TimeInterval, numEventsToTryToFlush: Swift.Int, maxEventsPerSession: Swift.Int)
 }
-extension Tracker {
+extension zpdk.Tracker {
   @objc public static let shared: zpdk.Tracker
   @objc final public func trackEvent(_ eventId: Swift.String, metadata: [Swift.String : Any]?)
   final public func startAndTrackSession(url: Foundation.URL? = nil)
 }
-extension UIDevice {
-  public var modelName: Swift.String {
+extension UIKit.UIDevice {
+  @_Concurrency.MainActor(unsafe) public var modelName: Swift.String {
     get
   }
 }
-extension ApplicationEvent {
+extension zpdk.ApplicationEvent {
   public var id: Swift.String {
     get
   }
@@ -88,7 +91,7 @@ public enum ApplicationEvent : zpdk.TrackerEventType {
   case initSession(sessionInfo: [Swift.String : Any]?)
   case linkOpen(queryItems: [Swift.String : Any]?)
 }
-extension ApplicationEvent {
+extension zpdk.ApplicationEvent {
   public static func getLinkOpenEvent(from url: Foundation.URL) -> zpdk.ApplicationEvent
 }
 public struct ZPTrackingEvent : zpdk.TrackerEventType {
@@ -123,7 +126,7 @@ public protocol TrackerEventType {
 }
 public protocol ProviderObjectType : Swift.Decodable, Swift.Encodable {
 }
-extension Array : zpdk.ProviderObjectType where Element : Swift.Decodable, Element : Swift.Encodable {
+extension Swift.Array : zpdk.ProviderObjectType where Element : Swift.Decodable, Element : Swift.Encodable {
 }
 public enum FlushResult {
   case success
@@ -152,7 +155,7 @@ public protocol TrackerServer {
   @objc deinit
   @objc override dynamic public init()
 }
-extension Tracker {
+extension zpdk.Tracker {
   final public var zaloID: Swift.String? {
     get
     set

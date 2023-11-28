@@ -6,6 +6,6 @@ framework module zpdk {
 }
 
 module zpdk.Swift {
-    header "zpdk-Swift.h"
-    requires objc
+  header "zpdk-Swift.h"
+  requires objc
 }
